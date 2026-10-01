@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MyPersonalPage</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0e1124;--bg2:#161a38;--line:#2a2f5c;--tx:#eceaff;--mu:#9a9cc8;--a:#ff6b8b;--b:#37d9c0}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font:16px/1.6 'Space Grotesk',system-ui,sans-serif;overflow-x:hidden}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;border-radius:10px;padding:.6rem 1.1rem;background:var(--bg2);border:1px solid var(--line);transition:.2s}
+button:hover{border-color:var(--b)}
+button.pri{background:linear-gradient(120deg,var(--a),#ff9a6b);color:#1a0b14;font-weight:700;border:0}
+input,textarea{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:.65rem .8rem;width:100%}
+:focus-visible{outline:2px solid var(--b);outline-offset:2px}
+#prog{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--a),var(--b));z-index:50}
+nav{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:.9rem 5vw;backdrop-filter:blur(12px);background:#0e1124cc;z-index:40;border-bottom:1px solid var(--line)}
+.logo{font-weight:700;font-size:1.15rem}.logo i{color:var(--a);font-style:normal}
+.hero{min-height:100vh;display:grid;place-items:center;text-align:center;padding:7rem 5vw 4rem;position:relative;overflow:hidden}
+.blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.35;will-change:transform}
+.b1{width:420px;height:420px;background:var(--a);top:8%;left:-6%}.b2{width:380px;height:380px;background:var(--b);bottom:2%;right:-4%}
+.hero h1{font-size:clamp(2.6rem,8vw,6rem);line-height:1.02;letter-spacing:-.03em;max-width:14ch;margin:0 auto 1.2rem;position:relative}
+.hero p{max-width:46ch;margin:0 auto 2rem;color:var(--mu);position:relative}
+.hero .cta{position:relative;display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap}
+section.s{padding:6rem 5vw;max-width:1100px;margin:auto}
+section.s h2{font-size:clamp(1.8rem,4vw,2.8rem);letter-spacing:-.02em;margin-bottom:2rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.2rem}
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:1.5rem}
+.card h3{margin-bottom:.4rem}.card p{color:var(--mu);font-size:.95rem}
+.rv{opacity:0;transform:translateY(40px) scale(.97);transition:opacity .8s ease,transform .8s ease}
+.rv.in{opacity:1;transform:none}
+.rv:nth-child(2){transition-delay:.12s}.rv:nth-child(3){transition-delay:.24s}
+footer{text-align:center;padding:3rem 5vw;color:var(--mu);border-top:1px solid var(--line)}
+footer b{color:var(--tx)}
+/* modal */
+#modal{position:fixed;inset:0;background:#05061199;display:none;place-items:center;z-index:60;padding:1rem}
+#modal.on{display:grid}
+.box{background:var(--bg2);border:1px solid var(--line);border-radius:18px;padding:2rem;width:min(400px,100%);display:grid;gap:.8rem;animation:pop .3s}
+@keyframes pop{from{transform:scale(.92);opacity:0}}
+.err{color:var(--a);font-size:.9rem;min-height:1.2em}
+.tabs2{display:flex;gap:.5rem}.tabs2 button{flex:1}.tabs2 .act{border-color:var(--b);color:var(--b)}
+/* app */
+#app{display:none;padding:6rem 5vw 3rem;max-width:1200px;margin:auto}
+#app.on{display:block}
+.top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem}
+.top h2{font-size:2rem;letter-spacing:-.02em}
+.stat{font-size:.85rem;color:var(--mu)}
+.tabs{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.5rem}
+.tabs button.act{background:var(--b);color:#06201b;border-color:var(--b);font-weight:700}
+.pane{display:none}.pane.on{display:block;animation:pop .35s}
+.row{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1rem}.row input{flex:1;min-width:140px}
+.links{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:.8rem}
+.lk{display:flex;align-items:center;gap:.7rem;background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:.8rem;text-decoration:none;color:var(--tx);position:relative;transition:.2s}
+.lk:hover{transform:translateY(-3px);border-color:var(--a)}
+.lk em{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;font-style:normal;font-weight:700;color:#10122a;flex:none}
+.lk span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.lk .x{position:absolute;top:2px;right:4px;background:none;border:0;padding:2px 6px;color:var(--mu)}
+h4{margin:1.6rem 0 .8rem;color:var(--mu);font-weight:500}
+.pop{display:flex;gap:.5rem;flex-wrap:wrap}.pop button{padding:.4rem .8rem;font-size:.9rem}
+canvas{width:100%;background:#fbfbff;border-radius:14px;touch-action:none;cursor:crosshair;display:block}
+.tools{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;margin-bottom:.8rem}
+.tools input[type=color]{width:44px;height:38px;padding:2px}.tools input[type=range]{width:120px;padding:0}
+textarea{min-height:340px;resize:vertical}
+.todo{display:flex;align-items:center;gap:.7rem;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:.6rem .9rem;margin-bottom:.5rem}
+.todo span{flex:1}.todo.d span{text-decoration:line-through;color:var(--mu)}
+.todo input{width:auto}.todo button{padding:.2rem .6rem}
+.chat{display:flex;flex-direction:column;gap:.6rem;height:46vh;min-height:280px;overflow-y:auto;background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:1rem;margin-bottom:.8rem}
+.m{max-width:80%;padding:.6rem .9rem;border-radius:14px;white-space:pre-wrap;word-wrap:break-word}
+.m.user{align-self:flex-end;background:var(--a);color:#1a0b14}.m.assistant{align-self:flex-start;background:var(--bg);border:1px solid var(--line)}
+select{background:var(--bg);color:var(--tx);border:1px solid var(--line);border-radius:10px;padding:.65rem .8rem}
+details.set{margin-bottom:1rem}details.set summary{cursor:pointer;color:var(--b);margin-bottom:.8rem}
+#cs{font-size:.85rem}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div id="prog"></div>
+<nav>
+  <div class="logo">My<i>Personal</i>Page</div>
+  <div><button id="navBtn" class="pri">Sign in</button></div>
+</nav>
+
+<!-- LANDING -->
+<div id="landing">
+  <header class="hero">
+    <div class="blob b1" data-sp=".12"></div><div class="blob b2" data-sp="-.1"></div>
+    <div>
+      <h1>Your whole corner of the internet.</h1>
+      <p>Keep your links, notes, tasks and a whiteboard in one place. Sign in from any computer and it is all there.</p>
+      <div class="cta"><button class="pri" data-open="up">Create my page</button><button data-open="in">I have an account</button></div>
+    </div>
+  </header>
+  <section class="s">
+    <h2 class="rv">Everything you keep coming back to</h2>
+    <div class="grid">
+      <div class="card rv"><h3>Links</h3><p>Add your own links or tap a popular site to pin it. Open them in one click.</p></div>
+      <div class="card rv"><h3>Whiteboard</h3><p>Sketch ideas with a pen and eraser. Your drawing is saved with your page.</p></div>
+      <div class="card rv"><h3>Notes and tasks</h3><p>A notepad that autosaves and a to-do list you can tick off.</p></div>
+    </div>
+  </section>
+  <section class="s">
+    <h2 class="rv">Saved twice, so nothing is lost</h2>
+    <div class="grid">
+      <div class="card rv"><h3>On this computer</h3><p>Every change is saved in your browser instantly, even offline.</p></div>
+      <div class="card rv"><h3>In the cloud</h3><p>When the cloud server is running, your page is also saved to your account.</p></div>
+      <div class="card rv"><h3>Any computer</h3><p>Sign in with your username and password and pick up where you left off.</p></div>
+    </div>
+  </section>
+  <section class="s" style="text-align:center">
+    <h2 class="rv">Ready? It takes ten seconds.</h2>
+    <div class="rv"><button class="pri" data-open="up">Create my page</button></div>
+  </section>
+</div>
+
+<!-- APP -->
+<main id="app">
+  <div class="top">
+    <div><h2 id="hi"></h2><div class="stat" id="stat">Saved</div></div>
+    <div class="row" style="margin:0"><button id="exp">Export</button><button id="imp">Import</button><button id="out">Sign out</button></div>
+  </div>
+  <div class="tabs" id="tabs">
+    <button data-t="links" class="act">Links</button><button data-t="board">Whiteboard</button><button data-t="notes">Notes</button><button data-t="todo">Tasks</button><button data-t="ai">AI</button>
+  </div>
+
+  <div class="pane on" id="p-links">
+    <div class="row"><input id="ln" placeholder="Name (e.g. My blog)"><input id="lu" placeholder="Address (e.g. example.com)"><button class="pri" id="la">Add link</button></div>
+    <div class="links" id="lks"></div>
+    <h4>Popular sites. Tap to add</h4>
+    <div class="pop" id="pop"></div>
+  </div>
+
+  <div class="pane" id="p-board">
+    <div class="tools">
+      <input type="color" id="col" value="#1b1e3f" aria-label="Pen colour">
+      <input type="range" id="sz" min="1" max="30" value="4" aria-label="Pen size">
+      <button id="pen" class="act">Pen</button><button id="era">Eraser</button><button id="clr">Clear board</button>
+    </div>
+    <canvas id="cv" width="1100" height="620"></canvas>
+  </div>
+
+  <div class="pane" id="p-notes"><textarea id="nt" placeholder="Write anything. It saves as you type."></textarea></div>
+
+  <div class="pane" id="p-todo">
+    <div class="row"><input id="ti" placeholder="New task"><button class="pri" id="ta">Add task</button></div>
+    <div id="tl"></div>
+  </div>
+
+  <div class="pane" id="p-ai">
+    <details class="set" id="aiSet"><summary>AI settings. Add your API key</summary>
+      <div class="row">
+        <select id="aiP"><option value="anthropic">Anthropic (Claude)</option><option value="openai">OpenAI</option><option value="other">Other (OpenAI-compatible)</option></select>
+        <input id="aiM" placeholder="Model name">
+      </div>
+      <div class="row"><input id="aiB" placeholder="Base URL, e.g. https://api.groq.com/openai/v1" style="display:none"><input id="aiK" type="password" placeholder="API key" autocomplete="off"><button class="pri" id="aiS">Save settings</button></div>
+      <div class="stat">Your key is stored only in this browser on this computer. It is never sent to the cloud server, so on a new computer you add it again.</div>
+    </details>
+    <div class="chat" id="chat"></div>
+    <div class="row"><input id="aiI" placeholder="Ask your AI anything"><button class="pri" id="aiG">Send</button><button id="aiC">Clear chat</button></div>
+  </div>
+</main>
+
+<footer>MyPersonalPage &mdash; created by <b>Pinto</b></footer>
+
+<!-- AUTH -->
+<div id="modal">
+  <div class="box">
+    <div class="tabs2"><button id="mIn">Sign in</button><button id="mUp">Create account</button></div>
+    <input id="un" placeholder="Username" autocomplete="username">
+    <input id="pw" type="password" placeholder="Password" autocomplete="current-password">
+    <input id="srv" placeholder="Cloud server address (leave empty if this page is served by server.js)">
+    <div id="cs">Checking cloud...</div>
+    <div class="err" id="err"></div>
+    <button class="pri" id="go">Continue</button>
+    <button id="cancel">Cancel</button>
+  </div>
+</div>
+<input type="file" id="file" accept=".json" hidden>
+
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const sha=async t=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t)))].map(b=>b.toString(16).padStart(2,'0')).join('');
+let API=localStorage.getItem('mpp_api')||''; // empty = the server that served this page
+let cloud=false, user=null, key=null, D=null, mode='in', tm;
+const blank=()=>({links:[],notes:'',todos:[],board:'',chat:[],updated:0});
+const ping=()=>fetch(API+'/api/ping').then(r=>{cloud=r.ok}).catch(()=>{cloud=false}).then(()=>{
+  $('#cs').textContent=cloud?'Cloud connected. Your page saves online.':'Cloud offline. Saving on this computer only.';
+  $('#cs').style.color=cloud?'var(--b)':'var(--a)'});
+$('#srv').value=API;
+let ready=ping();
+$('#srv').onchange=e=>{API=e.target.value.trim().replace(/\/+$/,'');localStorage.setItem('mpp_api',API);ready=ping()};
+const POP=[['YouTube','youtube.com'],['Gmail','mail.google.com'],['Google Drive','drive.google.com'],['Maps','maps.google.com'],['Calendar','calendar.google.com'],['GitHub','github.com'],['Reddit','reddit.com'],['Wikipedia','wikipedia.org'],['Spotify','open.spotify.com'],['Netflix','netflix.com'],['X','x.com'],['Claude','claude.ai']];
+const hue=s=>{let h=0;for(const c of s)h=(h*31+c.charCodeAt(0))%360;return`hsl(${h} 80% 70%)`};
+const fix=u=>/^https?:\/\//i.test(u)?u:'https://'+u;
+
+/* ---------- storage ---------- */
+const users=()=>JSON.parse(localStorage.getItem('mpp_users')||'{}');
+function setStat(t){$('#stat').textContent=t}
+function save(){
+  D.updated=Date.now();
+  try{localStorage.setItem('mpp_data_'+user,JSON.stringify(D))}catch(e){setStat('Browser storage is full');return}
+  setStat(cloud?'Saving...':'Saved on this computer');
+  clearTimeout(tm);
+  tm=setTimeout(async()=>{
+    if(!cloud)return;
+    try{const r=await fetch(API+'/api/save',{method:'POST',body:JSON.stringify({user,key,data:D})});setStat(r.ok?'Saved on this computer and in the cloud':'Cloud save failed')}
+    catch{setStat('Saved on this computer. Cloud offline')}
+  },600);
+}
+
+/* ---------- auth ---------- */
+function openModal(m){mode=m;$('#err').textContent='';$('#mIn').classList.toggle('act',m==='in');$('#mUp').classList.toggle('act',m==='up');$('#pw').autocomplete=m==='in'?'current-password':'new-password';$('#modal').classList.add('on');$('#un').focus()}
+$$('[data-open]').forEach(b=>b.onclick=()=>openModal(b.dataset.open));
+$('#navBtn').onclick=()=>openModal('in');
+$('#mIn').onclick=()=>openModal('in');$('#mUp').onclick=()=>openModal('up');
+$('#cancel').onclick=()=>$('#modal').classList.remove('on');
+$('#pw').onkeydown=e=>{if(e.key==='Enter')$('#go').click()};
+$('#go').onclick=async()=>{
+  const u=$('#un').value.trim().toLowerCase(), p=$('#pw').value, E=$('#err');
+  if(u.length<3)return E.textContent='Username needs at least 3 characters.';
+  if(p.length<6)return E.textContent='Password needs at least 6 characters.';
+  await ready;
+  const k=await sha(u+':'+p); let cd=null;
+  try{
+    if(cloud){
+      const r=await fetch(API+'/api/'+(mode==='up'?'register':'login'),{method:'POST',body:JSON.stringify({user:u,key:k})});
+      if(r.status===409)return E.textContent='That username is taken. Try another.';
+      if(r.status===404)return E.textContent='No account with that username. Create one instead.';
+      if(r.status===401)return E.textContent='Wrong password.';
+      if(mode==='in')cd=(await r.json()).data;
+    }else{
+      const us=users();
+      if(mode==='up'){if(us[u])return E.textContent='That username is taken on this computer.';us[u]=k;localStorage.setItem('mpp_users',JSON.stringify(us))}
+      else{if(!us[u])return E.textContent='No account with that username. Create one instead.';if(us[u]!==k)return E.textContent='Wrong password.'}
+    }
+  }catch{return E.textContent='Could not reach the server. Try again.'}
+  user=u;key=k;
+  const ld=JSON.parse(localStorage.getItem('mpp_data_'+u)||'null');
+  D={...blank(),...([cd,ld].filter(Boolean).sort((a,b)=>b.updated-a.updated)[0]||{})};
+  sessionStorage.setItem('mpp_s',JSON.stringify({user,key}));
+  $('#modal').classList.remove('on');$('#pw').value='';start();save();
+};
+$('#out').onclick=()=>{sessionStorage.removeItem('mpp_s');location.reload()};
+
+/* ---------- app ---------- */
+function start(){
+  $('#landing').style.display='none';$('#app').classList.add('on');
+  $('#navBtn').style.display='none';$('#hi').textContent='Hello, '+user;
+  renderLinks();renderTodos();$('#nt').value=D.notes;loadBoard();loadAI();scrollTo(0,0);
+}
+$$('#tabs button').forEach(b=>b.onclick=()=>{
+  $$('#tabs button').forEach(x=>x.classList.toggle('act',x===b));
+  $$('.pane').forEach(p=>p.classList.toggle('on',p.id==='p-'+b.dataset.t));
+});
+
+/* links */
+function renderLinks(){
+  $('#lks').innerHTML='';
+  if(!D.links.length)$('#lks').innerHTML='<p class="stat">No links yet. Add one above or tap a popular site below.</p>';
+  D.links.forEach((l,i)=>{
+    const a=document.createElement('a');a.className='lk';a.href=l.url;a.target='_blank';a.rel='noopener';
+    a.innerHTML=`<em style="background:${hue(l.name)}"></em><span></span><button class="x" aria-label="Remove link">&times;</button>`;
+    a.querySelector('em').textContent=l.name[0].toUpperCase();a.querySelector('span').textContent=l.name;
+    a.querySelector('.x').onclick=e=>{e.preventDefault();D.links.splice(i,1);renderLinks();save()};
+    $('#lks').append(a);
+  });
+}
+function addLink(n,u){if(!n||!u)return;D.links.push({name:n,url:fix(u)});renderLinks();save()}
+$('#la').onclick=()=>{addLink($('#ln').value.trim()||$('#lu').value.trim(),$('#lu').value.trim());$('#ln').value=$('#lu').value=''};
+POP.forEach(([n,u])=>{const b=document.createElement('button');b.textContent='+ '+n;b.onclick=()=>addLink(n,u);$('#pop').append(b)});
+
+/* notes + tasks */
+$('#nt').oninput=e=>{D.notes=e.target.value;save()};
+function renderTodos(){
+  $('#tl').innerHTML='';
+  D.todos.forEach((t,i)=>{
+    const d=document.createElement('div');d.className='todo'+(t.done?' d':'');
+    d.innerHTML='<input type="checkbox"><span></span><button aria-label="Delete task">&times;</button>';
+    d.querySelector('input').checked=t.done;d.querySelector('span').textContent=t.text;
+    d.querySelector('input').onchange=e=>{t.done=e.target.checked;renderTodos();save()};
+    d.querySelector('button').onclick=()=>{D.todos.splice(i,1);renderTodos();save()};
+    $('#tl').append(d);
+  });
+}
+const addTodo=()=>{const v=$('#ti').value.trim();if(!v)return;D.todos.push({text:v,done:false});$('#ti').value='';renderTodos();save()};
+$('#ta').onclick=addTodo;$('#ti').onkeydown=e=>{if(e.key==='Enter')addTodo()};
+
+/* whiteboard */
+const cv=$('#cv'),cx=cv.getContext('2d');let draw=false,erase=false,last;
+function paintWhite(){cx.fillStyle='#fbfbff';cx.fillRect(0,0,cv.width,cv.height)}
+function loadBoard(){paintWhite();if(D.board){const i=new Image();i.onload=()=>cx.drawImage(i,0,0);i.src=D.board}}
+const pt=e=>{const r=cv.getBoundingClientRect();return[(e.clientX-r.left)*cv.width/r.width,(e.clientY-r.top)*cv.height/r.height]};
+cv.onpointerdown=e=>{draw=true;last=pt(e);cv.setPointerCapture(e.pointerId);stroke(last,last)};
+cv.onpointermove=e=>{if(!draw)return;const p=pt(e);stroke(last,p);last=p};
+cv.onpointerup=cv.onpointercancel=()=>{if(!draw)return;draw=false;D.board=cv.toDataURL('image/png');save()};
+function stroke(a,b){cx.strokeStyle=erase?'#fbfbff':$('#col').value;cx.lineWidth=erase?$('#sz').value*3:$('#sz').value;cx.lineCap=cx.lineJoin='round';cx.beginPath();cx.moveTo(...a);cx.lineTo(...b);cx.stroke()}
+$('#pen').onclick=()=>{erase=false;$('#pen').classList.add('act');$('#era').classList.remove('act')};
+$('#era').onclick=()=>{erase=true;$('#era').classList.add('act');$('#pen').classList.remove('act')};
+$('#clr').onclick=()=>{if(confirm('Clear the whiteboard?')){paintWhite();D.board='';save()}};
+
+/* AI */
+const DEF={anthropic:'claude-sonnet-4-6',openai:'gpt-4o-mini',other:''};
+const AI=()=>JSON.parse(localStorage.getItem('mpp_ai_'+user)||'{"prov":"anthropic","model":"'+DEF.anthropic+'","key":"","base":""}');
+function loadAI(){const c=AI();$('#aiP').value=c.prov;$('#aiM').value=c.model;$('#aiK').value=c.key;$('#aiB').value=c.base;$('#aiB').style.display=c.prov==='other'?'':'none';$('#aiSet').open=!c.key;renderChat()}
+$('#aiP').onchange=()=>{$('#aiM').value=DEF[$('#aiP').value];$('#aiB').style.display=$('#aiP').value==='other'?'':'none'};
+$('#aiS').onclick=()=>{localStorage.setItem('mpp_ai_'+user,JSON.stringify({prov:$('#aiP').value,model:$('#aiM').value.trim(),key:$('#aiK').value.trim(),base:$('#aiB').value.trim()}));$('#aiSet').open=false};
+function renderChat(){
+  const c=$('#chat');c.innerHTML='';
+  if(!D.chat.length)c.innerHTML='<p class="stat">Add your API key in the settings above, then ask something.</p>';
+  D.chat.forEach(m=>{const d=document.createElement('div');d.className='m '+m.role;d.textContent=m.content;c.append(d)});
+  c.scrollTop=c.scrollHeight;
+}
+async function ask(msgs){
+  const c=AI();if(!c.key)throw new Error('Add your API key in the AI settings first.');
+  if(c.prov==='anthropic'){
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'content-type':'application/json','x-api-key':c.key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:c.model,max_tokens:1024,messages:msgs})});
+    const j=await r.json();if(!r.ok)throw new Error(j.error?.message||'Request failed ('+r.status+')');
+    return j.content.map(x=>x.text||'').join('');
+  }
+  const base=c.prov==='openai'?'https://api.openai.com/v1':c.base.replace(/\/+$/,'');
+  const r=await fetch(base+'/chat/completions',{method:'POST',headers:{'content-type':'application/json',authorization:'Bearer '+c.key},body:JSON.stringify({model:c.model,messages:msgs})});
+  const j=await r.json();if(!r.ok)throw new Error(j.error?.message||'Request failed ('+r.status+')');
+  return j.choices[0].message.content;
+}
+async function sendAI(){
+  const v=$('#aiI').value.trim();if(!v)return;
+  $('#aiI').value='';D.chat.push({role:'user',content:v});renderChat();
+  const g=$('#aiG');g.disabled=true;g.textContent='...';
+  try{D.chat.push({role:'assistant',content:await ask(D.chat.filter(m=>!m.content.startsWith('Error: ')).slice(-20))})}
+  catch(e){D.chat.push({role:'assistant',content:'Error: '+e.message})}
+  g.disabled=false;g.textContent='Send';renderChat();save();
+}
+$('#aiG').onclick=sendAI;$('#aiI').onkeydown=e=>{if(e.key==='Enter')sendAI()};
+$('#aiC').onclick=()=>{if(confirm('Clear the chat?')){D.chat=[];renderChat();save()}};
+
+/* export / import */
+$('#exp').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(D)],{type:'application/json'}));a.download='mypersonalpage-'+user+'.json';a.click()};
+$('#imp').onclick=()=>$('#file').click();
+$('#file').onchange=async e=>{try{const j=JSON.parse(await e.target.files[0].text());D={...blank(),...j};start();save()}catch{alert('That file is not a MyPersonalPage backup.')}};
+
+/* restore session in this tab */
+(async()=>{
+  const s=JSON.parse(sessionStorage.getItem('mpp_s')||'null');if(!s)return;
+  await ready;
+  user=s.user;key=s.key;D={...blank(),...JSON.parse(localStorage.getItem('mpp_data_'+user)||'null')};
+  if(cloud){try{const r=await fetch(API+'/api/login',{method:'POST',body:JSON.stringify({user,key})});if(r.ok){const c=(await r.json()).data;if(c&&c.updated>D.updated)D=c}}catch{}}
+  start();
+})();
+
+/* ---------- scroll animations ---------- */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.15});
+$$('.rv').forEach(el=>io.observe(el));
+addEventListener('scroll',()=>{
+  const h=document.documentElement,y=scrollY;
+  $('#prog').style.width=(y/(h.scrollHeight-innerHeight||1)*100)+'%';
+  $$('.blob').forEach(b=>b.style.transform=`translateY(${y*b.dataset.sp}px)`);
+},{passive:true});
+</script>
+</body>
+</html>
